@@ -12,9 +12,8 @@ include_directories(${CMAKE_SOURCE_DIR}/Client)
 
 # Додаємо виконуваний файл для клієнта
 add_executable(client
-    Client/SerialPort.cpp
-    Client/TikTakToe.cpp
-    Client/SerialPort.h
+    ../Client/SerialPort.cpp
+    ../Client/TikTakToe.cpp
 )
 
 # Змінні для Arduino
