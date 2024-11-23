@@ -12,15 +12,16 @@ include_directories(${CMAKE_SOURCE_DIR}/Client)
 
 # Додаємо виконуваний файл для клієнта
 add_executable(client
-    Client/ClientCommunication.cpp
-    Client/ClientMain.cpp
+    Client/SerialPort.cpp
+    Client/TikTakToe.cpp
+    Client/SerialPort.h
 )
 
 # Змінні для Arduino
 set(ARDUINO_CLI "arduino-cli")
-set(ARDUINO_BOARD "arduino:avr:nano")
+set(ARDUINO_BOARD "arduino:avr:uno")
 set(ARDUINO_PORT "COM5")
-set(ARDUINO_SRC "${CMAKE_SOURCE_DIR}/UARTserver/UARTserver.ino")
+set(ARDUINO_SRC "${CMAKE_SOURCE_DIR}/Server/server/server.ino")
 
 # Компіляція серверного коду для Arduino
 add_custom_target(compile_server ALL
