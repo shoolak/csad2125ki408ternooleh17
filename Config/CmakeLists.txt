@@ -20,7 +20,7 @@ add_executable(client
 set(ARDUINO_CLI "arduino-cli")
 set(ARDUINO_BOARD "arduino:avr:uno")
 set(ARDUINO_PORT "COM5")
-set(ARDUINO_SRC "${CMAKE_SOURCE_DIR}/Server/server/server.ino")
+set(ARDUINO_SRC "${CMAKE_SOURCE_DIR}/../Server/server/server.ino")
 
 # Компіляція серверного коду для Arduino
 add_custom_target(compile_server ALL
