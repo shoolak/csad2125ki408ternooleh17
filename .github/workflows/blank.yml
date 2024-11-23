@@ -32,7 +32,7 @@ jobs:
 
       # Запустити CMake для конфігурації проєкту
       - name: Конфігурація CMake
-        run: cmake -S . -B build
+        run: cmake -S Config -B Build
         shell: cmd
 
       # Зібрати проєкт за допомогою CMake
