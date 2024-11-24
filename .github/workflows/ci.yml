@@ -44,7 +44,7 @@ jobs:
       - name: Run Tests
         run: |
           cd Build
-          ctest --output-on-failure --output-log test_results.txt || true
+          ctest --output-on-failure --output-log Build\test\test_results.txt || true
         shell: cmd
 
       # Перевірити вміст папки build
