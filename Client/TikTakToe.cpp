@@ -1,11 +1,14 @@
 #include <iostream>
 #include "SerialPort.h"
 
+/**
+ * @brief Main function to load configuration, establish serial connection, and manage user interaction.
+ * @return Exit status (0 for success, 1 for failure).
+ */
 int main()
 {
     try
     {
-        // Завантажуємо конфігурацію з файлу
         loadConfig("../Config/config.json");
         std::cout << "Configuration loaded: Port = " << port << ", BaudRate = " << baudRate << std::endl;
 
@@ -33,12 +36,10 @@ int main()
 
             if (mode == "3")
             {
-                // Цикл для відображення стану гри в режимі AI vs AI
                 while (true)
                 {
                     response = serial.sendMessage("GetGameState\n");
 
-                    // Виводимо стан дошки
                     if (response.find("BoardState:") == 0)
                     {
                         std::string boardState = response.substr(12);
@@ -46,8 +47,7 @@ int main()
                     }
 
                     std::cout << response << std::endl;
-
-                    // Перевіряємо, чи гра завершилася
+          
                     if (response.find("Wins") != std::string::npos || response.find("Draw") != std::string::npos)
                     {
                         std::cout << "The game is over!" << std::endl;

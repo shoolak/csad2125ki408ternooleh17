@@ -1,24 +1,48 @@
 #include <Arduino.h>
 
+/** Constant representing the size of the tic-tac-toe board. */
 const int BOARD_SIZE = 3;
+/** Symbol representing Player X. */
 const char PLAYER_X = 'X';
+/** Symbol representing Player O. */
 const char PLAYER_O = 'O';
+/** Mode for Man vs Man gameplay. */
 const int MODE_MAN_VS_MAN = 1;
+/** Mode for Man vs AI gameplay. */
 const int MODE_MAN_VS_AI = 2;
+/** Mode for AI vs AI gameplay. */
 const int MODE_AI_VS_AI = 3;
 
+/** 3x3 tic-tac-toe board initialized with cell numbers. */
 char board[BOARD_SIZE][BOARD_SIZE] = { {'1', '2', '3'}, {'4', '5', '6'}, {'7', '8', '9'} };
+
+/** Indicates whether a game has started. */
 bool isGameStarted = false;
-int gameMode = 0; // 1 - Man vs Man, 2 - Man vs AI, 3 - AI vs AI
-int lastServerMove = -1; // Last move of the AI
+
+/** Variable representing the selected game mode. */
+int gameMode = 0;
+
+/** The last move made by the server AI, for tracking purposes. */
+int lastServerMove = -1; 
+
+/** Count of human players in the current game. */
 int playerCount = 0;
 
+/** Character representing the current player ('X' or 'O'). */
 char globalCurrentPlayer = PLAYER_X;
 
+/**
+ * @brief Sets up the game environment and initializes serial communication.
+ */
 void setup() {
     Serial.begin(9600);
 }
 
+/**
+ * @brief Main loop of game logic and serial interactions.
+ * 
+ * Listens to commands and executing them
+ */
 void loop() {
     if (Serial.available() > 0) {
         String command = Serial.readStringUntil('\n');
@@ -41,6 +65,11 @@ void loop() {
     }
 }
 
+/**
+ * @brief Starts a new tic-tac-toe game by resetting the board and setting the game state to active.
+ * 
+ * Resets the board, sets `isGameStarted` to true, and outputs a message via Serial.
+ */
 void startGame() {
     resetBoard();
     isGameStarted = true;
@@ -48,12 +77,22 @@ void startGame() {
     printBoardGraphically();
 }
 
+/**
+ * @brief Sets the game mode based on the received command.
+ * 
+ * @param command A string command indicating the desired game mode.
+ */
 void setGameMode(const String& command) {
     String mode = command.substring(8);
     gameMode = mode.toInt();
     Serial.println("Mode set to " + mode);    
 }
 
+/**
+ * @brief Handles moves in the Man vs Man game mode.
+ * 
+ * @param command The command received indicating a player's move.
+ */
 void handleManvsMan(String command) {
     if (command.startsWith("Move") && isGameStarted) {
         int position = command.substring(5).toInt();
@@ -70,6 +109,11 @@ void handleManvsMan(String command) {
     }
 }
 
+/**
+ * @brief Handles moves in the Man vs AI game mode.
+ * 
+ * @param command The command received indicating a player's move.
+ */
 void handleManvsAI(String command) {
     if (command.startsWith("Move") && isGameStarted) {
         int position = command.substring(5).toInt();
@@ -88,6 +132,11 @@ void handleManvsAI(String command) {
     }
 }
 
+/**
+ * @brief Simulates moves in the AI vs AI game mode.
+ * 
+ * @param command The command received for AI interaction.
+ */
 void handleAIvsAI(String command) {
     if (isGameStarted) {
         globalCurrentPlayer = PLAYER_X;  // Почнемо з гравця X
@@ -108,6 +157,13 @@ void handleAIvsAI(String command) {
     }
 }
 
+/**
+ * @brief Places a player's move on the board if the position is valid.
+ * 
+ * @param position The position on the board (1-9).
+ * @param player The player symbol (X or O).
+ * @return True if the move was valid, false otherwise.
+ */
 bool makePlayerMove(int position, char player) {
     if (isPositionValid(position)) {
         int row = (position - 1) / BOARD_SIZE;
@@ -118,18 +174,36 @@ bool makePlayerMove(int position, char player) {
     return false;
 }
 
+
+/**
+ * @brief Executes the AI's move and prints the move to the Serial Monitor.
+ * 
+ * @param aiMove An array containing the row and column of the AI move.
+ * @param player The player symbol (usually O for AI).
+ */
 void makeAIMove(int aiMove[2], char player) {
     board[aiMove[0]][aiMove[1]] = player;
     lastServerMove = aiMove[0] * BOARD_SIZE + aiMove[1] + 1;
     Serial.println("ServerMove: " + String(lastServerMove));
 }
 
+/**
+ * @brief Checks if the specified position is available on the board.
+ * 
+ * @param position The board position (1-9).
+ * @return True if the position is valid and empty, false otherwise.
+ */
 bool isPositionValid(int position) {
     int row = (position - 1) / BOARD_SIZE;
     int col = (position - 1) % BOARD_SIZE;
     return (position >= 1 && position <= 9 && board[row][col] != PLAYER_X && board[row][col] != PLAYER_O);
 }
 
+/**
+ * @brief Checks the game status to determine if there's a win or a draw.
+ * 
+ * @return True if the game has ended, false otherwise.
+ */
 bool checkGameStatus() {
     if (checkWin(PLAYER_X)) {
         Serial.println("X Wins");
@@ -144,6 +218,9 @@ bool checkGameStatus() {
     return false;
 }
 
+/**
+ * @brief Resets the tic-tac-toe board to its initial state.
+ */
 void resetBoard() {
     for (int i = 0; i < BOARD_SIZE; i++) {
         for (int j = 0; j < BOARD_SIZE; j++) {
@@ -153,6 +230,12 @@ void resetBoard() {
     lastServerMove = -1;
 }
 
+/**
+ * @brief Checks if a specific player has won the game.
+ * 
+ * @param player The player symbol (X or O).
+ * @return True if the player has won, false otherwise.
+ */
 bool checkWin(char player) {
     for (int i = 0; i < BOARD_SIZE; i++) {
         if ((board[i][0] == player && board[i][1] == player && board[i][2] == player) ||
@@ -164,6 +247,11 @@ bool checkWin(char player) {
            (board[0][2] == player && board[1][1] == player && board[2][0] == player);
 }
 
+/**
+ * @brief Checks if the board is completely filled.
+ * 
+ * @return True if there are no empty spaces, false otherwise.
+ */
 bool isBoardFull() {
     for (int i = 0; i < BOARD_SIZE; i++) {
         for (int j = 0; j < BOARD_SIZE; j++) {
@@ -175,6 +263,10 @@ bool isBoardFull() {
     return true;
 }
 
+
+/**
+ * @brief Outputs the current board state to the Serial Monitor in a graphical format.
+ */
 void printBoardGraphically() {
     Serial.println("-------------");
     for (int i = 0; i < BOARD_SIZE; i++) {
@@ -189,10 +281,25 @@ void printBoardGraphically() {
     Serial.println(); // Blank line after board output
 }
 
+/**
+ * @brief Returns the opposing player symbol.
+ * 
+ * @param player The current player symbol.
+ * @return The opposing player symbol.
+ */
 char opponent(char player) {
     return (player == PLAYER_X) ? PLAYER_O : PLAYER_X;
 }
 
+
+/**
+ * @brief Calculates the best move for the AI player using minimax algorithm.
+ * 
+ * @param currentPlayer The player symbol (X or O) currently making the move.
+ * @param aiPlayer The AI player symbol.
+ * @param depth The current depth in the minimax recursion.
+ * @return An integer score representing the value of the game state.
+ */
 int minimax(char currentPlayer, char aiPlayer, int depth) {
     if (checkWin(aiPlayer)) {
         return 10 - depth; // AI wins
@@ -225,6 +332,12 @@ int minimax(char currentPlayer, char aiPlayer, int depth) {
     return bestScore;
 }
 
+/**
+ * @brief Finds the best move for the AI player using the minimax algorithm.
+ * 
+ * @param aiPlayer The AI player symbol.
+ * @param move An array to store the row and column of the best move.
+ */
 void bestMove(char aiPlayer, int move[2]) {
     int bestScore = -1000;
     move[0] = -1;
