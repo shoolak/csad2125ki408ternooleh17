@@ -20,4 +20,4 @@ public:
 
 void loadConfig(const std::string& filename);
 
-#endif // COMMUNICATION_H
+#endif
