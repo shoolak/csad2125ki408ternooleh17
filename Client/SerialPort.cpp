@@ -1,6 +1,6 @@
 #include "SerialPort.h"
 #include <iostream>
-#include <D:\casd\csad2125ki408ternooleh17\3party\nlohmann\json.hpp> 
+#include "D:\casd\csad2125ki408ternooleh17\3party\nlohmann\json.hpp"
 
 
 HANDLE hConsole;
@@ -89,7 +89,6 @@ void SerialCommunication::drawBoard(const std::string& boardState) {
                 std::cout << cell << " | ";
             }
             else {
-                // якщо значенн€ не 'X' або 'O', виводимо пусту кл≥тинку
                 std::cout << " " << " | ";
             }
         }
@@ -97,23 +96,16 @@ void SerialCommunication::drawBoard(const std::string& boardState) {
     }
 }
 
-using json = nlohmann::json;  // ≤м'€ дл€ JSON тип≥в
-
-
-
+using json = nlohmann::json;
 void loadConfig(const std::string& filename) {
-    std::ifstream file(filename);  // ¬≥дкриваЇмо файл
-
+    std::ifstream file(filename);
     if (!file.is_open()) {
         std::cerr << "Failed to open configuration file: " << filename << std::endl;
         return;
     }
-
     try {
         json j;
-        file >> j;  // «читуЇмо JSON
-
-        // ќтримуЇмо значенн€ з JSON
+        file >> j;  
         port = j["Connection"]["port"].get<std::string>();
         baudRate = j["Connection"]["baudRate"].get<int>();
 
