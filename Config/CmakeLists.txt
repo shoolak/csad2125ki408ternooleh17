@@ -11,17 +11,15 @@ set(CMAKE_CXX_STANDARD 17)
 include_directories(${CMAKE_SOURCE_DIR}/../Client)
 include_directories(${CMAKE_SOURCE_DIR}/../3party/nlohmann)
 
-add_library(jsn STATIC
-    ${CMAKE_SOURCE_DIR}/../3party/nlohmann/json.hpp
-)
+add_library(jsn INTERFACE)
+target_include_directories(jsn INTERFACE ${CMAKE_SOURCE_DIR}/../3party/nlohmann)
 
 # Додаємо виконуваний файл для клієнта
 add_executable(client
     ../Client/SerialPort.cpp
     ../Client/TikTakToe.cpp
 )
-
-target_link_libraries(client jsn)
+target_link_libraries(client PRIVATE jsn)
 # Змінні для Arduino
 set(ARDUINO_CLI "arduino-cli")
 set(ARDUINO_BOARD "arduino:avr:uno")
