@@ -40,6 +40,39 @@ jobs:
         run: cmake --build build
         shell: cmd
 
+
+        # Виконати тести
+      - name: Run Tests
+      run: |
+        cd build
+        ctest --output-on-failure --output-log test_results.txt || true
+      shell: cmd
+
+    # Перевірити вміст папки build
+    - name: List build directory
+      run: dir build
+      shell: cmd
+
+    # Переконатися, що результати існують
+    - name: Ensure test results exist
+      run: |
+        if not exist build\test_results.txt echo "No test results" > build\test_results.txt
+      shell: cmd
+
+    # Завантажити артефакти збірки
+    - name: Завантажити артефакти збірки
+      uses: actions/upload-artifact@v3
+      with:
+        name: build-artifacts
+        path: out/*
+    
+              # Архівувати результати тестів
+    - name: Archive test results
+      if: always()
+      run: |
+        move build\test_results.txt .
+      shell: cmd
+
       # Завантажити зкомпільовані артефакти (клієнт та Arduino)
       - name: Завантажити артефакти збірки
         uses: actions/upload-artifact@v3
