@@ -1,6 +1,6 @@
 #include "SerialPort.h"
 #include <iostream>
-#include "D:\casd\csad2125ki408ternooleh17\3party\nlohmann\json.hpp"
+#include "..\3party\nlohmann\json.hpp"
 
 
 HANDLE hConsole;
