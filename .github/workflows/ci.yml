@@ -37,45 +37,44 @@ jobs:
 
       # Зібрати проєкт за допомогою CMake
       - name: Збірка з CMake
-        run: cmake --build build
+        run: cmake --build Build
         shell: cmd
 
-
-        # Виконати тести
+      # Виконати тести
       - name: Run Tests
-      run: |
-        cd build
-        ctest --output-on-failure --output-log test_results.txt || true
-      shell: cmd
+        run: |
+          cd Build
+          ctest --output-on-failure --output-log test_results.txt || true
+        shell: cmd
 
-    # Перевірити вміст папки build
-    - name: List build directory
-      run: dir build
-      shell: cmd
+      # Перевірити вміст папки build
+      - name: List build directory
+        run: dir Build\test
+        shell: cmd
 
-    # Переконатися, що результати існують
-    - name: Ensure test results exist
-      run: |
-        if not exist build\test_results.txt echo "No test results" > build\test_results.txt
-      shell: cmd
+      # Переконатися, що результати існують
+      - name: Ensure test results exist
+        run: |
+          if not exist Build\test\test_results.txt echo "No test results" > Build\test\test_results.txt
+        shell: cmd
 
-    # Завантажити артефакти збірки
-    - name: Завантажити артефакти збірки
-      uses: actions/upload-artifact@v3
-      with:
-        name: build-artifacts
-        path: out/*
-    
-              # Архівувати результати тестів
-    - name: Archive test results
-      if: always()
-      run: |
-        move build\test_results.txt .
-      shell: cmd
+      # Завантажити артефакти збірки
+      - name: Завантажити артефакти збірки
+        uses: actions/upload-artifact@v3
+        with:
+          name: build-artifacts
+          path: Build\test\*
+
+      # Архівувати результати тестів
+      - name: Archive test results
+        if: always()
+        run: |
+          move Build\test\test_results.txt .
+        shell: cmd
 
       # Завантажити зкомпільовані артефакти (клієнт та Arduino)
       - name: Завантажити артефакти збірки
         uses: actions/upload-artifact@v3
         with:
           name: build-artifacts
-          path: out/*
+          path: Build\test\*
