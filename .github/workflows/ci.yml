@@ -31,10 +31,10 @@ jobs:
         run: arduino-cli core install arduino:avr
 
       # Завантажити та встановити Doxygen
-      - name: Завантажити та встановити Doxygen
+      - name: Встановити Doxygen через Scoop
         run: |
-          curl -L -o doxygen-installer.exe https://doxygen.nl/files/doxygen-1.9.6-setup.exe
-          start /wait doxygen-installer.exe /S
+        scoop bucket add extras
+        scoop install doxygen
 
       # Запустити CMake для конфігурації проєкту
       - name: Конфігурація CMake
