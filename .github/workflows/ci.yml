@@ -45,6 +45,9 @@ jobs:
           name: documentation
           path: Build/doc/html
 
+        - name: Перевірити вміст директорії Config
+          run: ls -la .
+         
       # Конфігурація CMake
       - name: Конфігурація CMake
         run: cmake -S Config -B Build
