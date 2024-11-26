@@ -10,7 +10,7 @@ on:
 
 jobs:
   cpp-arduino-build:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
 
     steps:
       # Клонування репозиторію
@@ -24,15 +24,17 @@ jobs:
           version: '0.19.2'
 
       # Встановлення основних інструментів
-      - name: Встановлення основних інструментів
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y build-essential cmake gcc g++ doxygen
+      - name: Встановити CMake
+        run: choco install cmake
 
       # Встановлення платформи Arduino AVR
       - name: Встановити платформу Arduino AVR
         run: arduino-cli core install arduino:avr
 
+      - name: Встановити Doxygen
+        uses: ssciwr/doxygen-install@v1
+        with:
+          version: '1.12.0'
       # Генерація документації (встановлення Doxygen)
       - name: Запустити Doxygen
         run: doxygen Doxyfile
@@ -46,7 +48,7 @@ jobs:
 
       # Перевірка вмісту директорії Config
       - name: Перевірити вміст директорії Config
-        run: ls -la Config
+        run: ls -la .
 
       # Конфігурація CMake
       - name: Конфігурація CMake
