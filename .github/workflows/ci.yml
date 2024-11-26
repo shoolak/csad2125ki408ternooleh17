@@ -10,7 +10,7 @@ on:
 
 jobs:
   cpp-arduino-build:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
@@ -24,43 +24,37 @@ jobs:
 
       # Встановити CMake
       - name: Встановити CMake
-        run: choco install cmake
+        run: sudo apt-get install -y cmake
 
       # Встановити платформу Arduino AVR
       - name: Встановити платформу Arduino AVR
         run: arduino-cli core install arduino:avr
 
-      # Завантажити та встановити Doxygen
-      - name: Встановити Doxygen через Scoop
-        run: |
-          scoop bucket add extras
-          scoop install doxygen
-
-      # Запустити CMake для конфігурації проєкту
-      - name: Конфігурація CMake
-        run: cmake -S Config -B Build
-        shell: cmd
-
-      # Зібрати проєкт за допомогою CMake
-      - name: Збірка з CMake
-        run: cmake --build build
-        shell: cmd
-
-      # Генерація документації Doxygen
+      # Генерація документації за допомогою Doxygen Action
       - name: Генерація документації Doxygen
-        run: doxygen Doxyfile
-        shell: cmd
+        uses: mattnotmitt/doxygen-action@v2
+        with:
+          working-directory: .
+          doxyfile-path: Doxyfile
 
       # Завантажити документацію
       - name: Завантажити документацію
         uses: actions/upload-artifact@v3
         with:
           name: documentation
-          path: Build\doc\html
+          path: Build/doc/html
+
+      # Запустити CMake для конфігурації проєкту
+      - name: Конфігурація CMake
+        run: cmake -S Config -B Build
+
+      # Зібрати проєкт за допомогою CMake
+      - name: Збірка з CMake
+        run: cmake --build Build
 
       # Завантажити зкомпільовані артефакти (клієнт та Arduino)
       - name: Завантажити артефакти збірки
         uses: actions/upload-artifact@v3
         with:
           name: build-artifacts
-          path: Build\test\*
+          path: Build/test/*
