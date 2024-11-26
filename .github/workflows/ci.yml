@@ -13,36 +13,50 @@ jobs:
     runs-on: windows-latest
 
     steps:
+      # Клонування репозиторію
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # Забезпечити налаштування Arduino CLI (якщо ще не доступний на ранері)
+      # Встановлення Arduino CLI
       - name: Встановити Arduino CLI
         uses: arduino/setup-arduino-cli@v1
         with:
           version: '0.19.2'
 
-      # Встановити CMake
+      # Встановлення основних інструментів
       - name: Встановити CMake
         run: choco install cmake
 
-      # Встановити платформу Arduino AVR
+      # Встановлення платформи Arduino AVR
       - name: Встановити платформу Arduino AVR
         run: arduino-cli core install arduino:avr
 
-      # Запустити CMake для конфігурації проєкту
+      - name: Встановити Doxygen
+        uses: ssciwr/doxygen-install@v1
+        with:
+          version: '1.12.0'
+      # Генерація документації (встановлення Doxygen)
+      - name: Запустити Doxygen
+        run: doxygen Doxyfile
+
+      # Завантажити документацію
+      - name: Завантажити документацію
+        uses: actions/upload-artifact@v3
+        with:
+          name: documentation
+          path: Build/doc/html/*
+
+      # Конфігурація CMake
       - name: Конфігурація CMake
         run: cmake -S Config -B Build
-        shell: cmd
 
-      # Зібрати проєкт за допомогою CMake
+      # Збірка з CMake
       - name: Збірка з CMake
-        run: cmake --build build
-        shell: cmd
+        run: cmake --build Build
 
-      # Завантажити зкомпільовані артефакти (клієнт та Arduino)
+      # Завантажити артефакти збірки
       - name: Завантажити артефакти збірки
         uses: actions/upload-artifact@v3
         with:
           name: build-artifacts
-          path: out/*
+          path: Build/test/*

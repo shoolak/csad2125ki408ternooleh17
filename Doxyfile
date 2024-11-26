@@ -1,0 +1,72 @@
+# Doxyfile 1.12.0
+
+# This file describes the settings to be used by the documentation system
+# Doxygen (www.doxygen.org) for a project.
+#
+# All text after a double hash (##) is considered a comment and is placed in
+# front of the TAG it is preceding.
+#
+# All text after a single hash (#) is considered a comment and will be ignored.
+# The format is:
+# TAG = value [value, ...]
+# For lists, items can also be appended using:
+# TAG += value [value, ...]
+# Values that contain spaces should be placed between quotes (\" \").
+#
+# Note:
+#
+# Use Doxygen to compare the used configuration file with the template
+# configuration file:
+# doxygen -x [configFile]
+# Use Doxygen to compare the used configuration file with the template
+# configuration file without replacing the environment variables or CMake type
+# replacement variables:
+# doxygen -x_noenv [configFile]
+
+#---------------------------------------------------------------------------
+# Project related configuration options
+#---------------------------------------------------------------------------
+
+
+
+DOXYFILE_ENCODING      = UTF-8
+PROJECT_NAME           = "Tic Tac Toe 3x3"
+PROJECT_BRIEF          = "Implementation of Tic Tac Toe 3x3 with 3 modes: ManVSMan, AIvsAI, ManVsAI"
+OUTPUT_DIRECTORY       = "./Build/doc"
+
+
+EXTRACT_ALL            = YES
+EXTRACT_PRIVATE        = NO
+EXTRACT_STATIC         = YES
+EXTRACT_LOCAL_CLASSES  = YES
+EXTRACT_LOCAL_METHODS  = YES
+EXTRACT_ANON_NSPACES   = NO
+SOURCE_BROWSER         = YES
+INLINE_SOURCES         = NO
+STRIP_CODE_COMMENTS    = YES
+
+
+FILE_PATTERNS          = *.cpp *.h *.ino
+RECURSIVE              = YES
+
+# Extension mapping to recognize .ino files as C++ code
+EXTENSION_MAPPING      = ino=C++
+
+# Source directories
+INPUT                  = ./Client ./Server/server
+INPUT_ENCODING         = UTF-8
+
+# Documentation output formats
+GENERATE_HTML          = YES
+GENERATE_LATEX         = NO
+GENERATE_MAN           = NO
+GENERATE_XML           = NO
+
+# HTML settings
+HTML_OUTPUT            = html
+HTML_FILE_EXTENSION    = .html
+HTML_COLORSTYLE_HUE    = 200
+HTML_DYNAMIC_SECTIONS  = YES
+GENERATE_TREEVIEW      = YES
+FULL_PATH_NAMES        = NO
+SHORT_NAMES            = YES
