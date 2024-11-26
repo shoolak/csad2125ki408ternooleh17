@@ -30,6 +30,9 @@ jobs:
       - name: Встановити платформу Arduino AVR
         run: arduino-cli core install arduino:avr
 
+      - name: Встановити Doxygen
+        run: choco install doxygen
+
       # Запустити CMake для конфігурації проєкту
       - name: Конфігурація CMake
         run: cmake -S Config -B Build
@@ -40,9 +43,19 @@ jobs:
         run: cmake --build build
         shell: cmd
 
+        name: Генерація документації Doxygen
+        run: doxygen Doxyfile
+        shell: cmd
+
+      - name: Завантажити документацію
+        uses: actions/upload-artifact@v3
+        with:
+          name: documentation
+          path: Build\doc\html
+
       # Завантажити зкомпільовані артефакти (клієнт та Arduino)
       - name: Завантажити артефакти збірки
         uses: actions/upload-artifact@v3
         with:
           name: build-artifacts
-          path: out/*
+          path: Build\test\*
