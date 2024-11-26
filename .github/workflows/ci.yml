@@ -34,7 +34,6 @@ jobs:
         run: arduino-cli core install arduino:avr
 
       # Генерація документації (встановлення Doxygen)
-
       - name: Запустити Doxygen
         run: doxygen Doxyfile
 
@@ -45,9 +44,10 @@ jobs:
           name: documentation
           path: Build/doc/html
 
-        - name: Перевірити вміст директорії Config
-          run: ls -la .
-         
+      # Перевірка вмісту директорії Config
+      - name: Перевірити вміст директорії Config
+        run: ls -la .
+
       # Конфігурація CMake
       - name: Конфігурація CMake
         run: cmake -S Config -B Build
