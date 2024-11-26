@@ -8,7 +8,9 @@ project(ClientServerProject)
 set(CMAKE_CXX_STANDARD 17)
 
 # Вказуємо директорію з заголовочними файлами
-include_directories(${CMAKE_SOURCE_DIR}/Client)
+include_directories(${CMAKE_SOURCE_DIR}/../Client)
+include_directories(${CMAKE_SOURCE_DIR}/../3party/nlohmann)
+
 
 # Додаємо виконуваний файл для клієнта
 add_executable(client
