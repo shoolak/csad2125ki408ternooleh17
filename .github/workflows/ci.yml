@@ -1,4 +1,4 @@
-name: CI for test,docs
+name: CI для C++ та Arduino
 
 on:
   push:
@@ -10,49 +10,53 @@ on:
 
 jobs:
   cpp-arduino-build:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
 
     steps:
+      # Клонування репозиторію
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # Забезпечити налаштування Arduino CLI (якщо ще не доступний на ранері)
+      # Встановлення Arduino CLI
       - name: Встановити Arduino CLI
         uses: arduino/setup-arduino-cli@v1
         with:
           version: '0.19.2'
 
-      # Встановити CMake
-      - name: Встановити CMake
-        run: choco install cmake
+      # Встановлення основних інструментів
+      - name: Встановлення основних інструментів
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential cmake gcc g++ doxygen
 
-      # Встановити платформу Arduino AVR
+      # Встановлення платформи Arduino AVR
       - name: Встановити платформу Arduino AVR
         run: arduino-cli core install arduino:avr
 
-      - name: Встановити doxygen
-        run: choco install doxygen.install
-
-      # Запустити CMake для конфігурації проєкту
-      - name: Конфігурація CMake
-        run: cmake -S Config -B Build
-        shell: cmd
-
-      # Зібрати проєкт за допомогою CMake
-      - name: Збірка з CMake
-        run: cmake --build build
-        shell: cmd
-
-      - name: Generate Documentation
+      # Генерація документації (встановлення Doxygen)
+      - name: Запустити Doxygen
         run: doxygen Doxyfile
+
+      # Завантажити документацію
       - name: Завантажити документацію
         uses: actions/upload-artifact@v3
         with:
           name: documentation
-          path: Build/doc/html
+          path: Build/doc/html/*
 
+      # Перевірка вмісту директорії Config
+      - name: Перевірити вміст директорії Config
+        run: ls -la .
 
-      # Завантажити зкомпільовані артефакти (клієнт та Arduino)
+      # Конфігурація CMake
+      - name: Конфігурація CMake
+        run: cmake -S Config -B Build
+
+      # Збірка з CMake
+      - name: Збірка з CMake
+        run: cmake --build Build
+
+      # Завантажити артефакти збірки
       - name: Завантажити артефакти збірки
         uses: actions/upload-artifact@v3
         with:
