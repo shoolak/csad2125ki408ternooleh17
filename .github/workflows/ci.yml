@@ -50,7 +50,7 @@ jobs:
 
       # Конфігурація CMake
       - name: Конфігурація CMake
-        run: cmake -S Config -B Build
+        run: cmake -S Config/CmakeLists.txt -B Build
 
       # Збірка з CMake
       - name: Збірка з CMake
