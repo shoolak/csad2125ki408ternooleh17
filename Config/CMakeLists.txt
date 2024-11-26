@@ -31,5 +31,7 @@ add_custom_target(compile_server ALL
 )
 # Додаємо залежність компіляції Arduino до клієнта
 add_dependencies(client compile_server)
+
 # Очищення зібраних файлів
 set_directory_properties(PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES "${CMAKE_BINARY_DIR}/client;${ARDUINO_SRC}")
+
