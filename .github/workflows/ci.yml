@@ -31,11 +31,9 @@ jobs:
         run: arduino-cli core install arduino:avr
 
       # Генерація документації за допомогою Doxygen Action
-      - name: Генерація документації Doxygen
-        uses: mattnotmitt/doxygen-action@v2
+      - uses: ssciwr/doxygen-install@v1
         with:
-          working-directory: .
-          doxyfile-path: Doxyfile
+        version: "1.12.0"
 
       # Завантажити документацію
       - name: Завантажити документацію
