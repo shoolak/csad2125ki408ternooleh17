@@ -16,7 +16,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # Забезпечити налаштування Arduino CLI (якщо ще не доступний на ранері)
+      # Встановити Arduino CLI
       - name: Встановити Arduino CLI
         uses: arduino/setup-arduino-cli@v1
         with:
@@ -30,9 +30,11 @@ jobs:
       - name: Встановити платформу Arduino AVR
         run: arduino-cli core install arduino:avr
 
-      # Встановити Doxygen
-      - name: Встановити Doxygen
-        run: choco install doxygen
+      # Завантажити та встановити Doxygen
+      - name: Завантажити та встановити Doxygen
+        run: |
+          curl -L -o doxygen-installer.exe https://doxygen.nl/files/doxygen-1.9.6-setup.exe
+          start /wait doxygen-installer.exe /S
 
       # Запустити CMake для конфігурації проєкту
       - name: Конфігурація CMake
@@ -54,7 +56,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: documentation
-          path: Build\doc\html\
+          path: Build\doc\html
 
       # Завантажити зкомпільовані артефакти (клієнт та Arduino)
       - name: Завантажити артефакти збірки
